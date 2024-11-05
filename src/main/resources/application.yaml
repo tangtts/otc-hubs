@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: UTC-HUBS
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/UTC_HUBS?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+server:
+  port: 8080
+mybatis-plus:
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: com.utc.hubs.entity
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
