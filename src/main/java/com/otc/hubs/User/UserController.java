@@ -1,17 +1,22 @@
 package com.otc.hubs.User;
 
+import cn.hutool.core.util.RandomUtil;
 import com.otc.hubs.User.DTO.ForgetPasswordDto;
 import com.otc.hubs.User.DTO.LoginDto;
 import com.otc.hubs.User.DTO.RegisterDto;
 import com.otc.hubs.commonService.SendEmail;
 import com.otc.hubs.entities.User;
 import com.otc.hubs.DTO.UserDTO;
+import com.otc.hubs.enums.SendEmailType;
+import com.otc.hubs.utils.RedisUtils;
 import com.otc.hubs.utils.ResultResponse;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 用户管理
  * 处理用户相关的操作，包括创建、查询和更新用户信息
@@ -26,10 +31,27 @@ public class UserController {
     @Resource
     SendEmail sendEmail;
 
+    @Resource
+    RedisUtils redisUtils;
 
+    /**
+     * 发送邮箱
+     * @return string
+     */
     @GetMapping("sendEmail")
-    public void sendEmail(){
-        sendEmail.sendSimpleEmail("2939117014@qq.com","test","test");
+    public ResultResponse sendEmail(){
+        String captchaKey = SendEmailType.REGISTER.getTemplateName() + ":captcha";
+        //  如果有以前的验证码，则删除
+        Boolean hasOldCaptcha = redisUtils.hasKey(captchaKey);
+        if(hasOldCaptcha){
+            redisUtils.delete(captchaKey);
+        }
+        // 使用 hutool 生成6位随机数
+        String captcha = RandomUtil.randomNumbers(6);
+        String captchaStr = SendEmailType.REGISTER.getTemplateName() + ":" + captcha;
+        redisUtils.set(captchaKey,captcha, 5, TimeUnit.MINUTES);
+        sendEmail.sendSimpleEmail("2939117014@qq.com",SendEmailType.REGISTER.getDesc() + "验证码",  captchaStr + ",5分钟内有效");
+        return ResultResponse.success("发送成功");
     }
 
     /**

@@ -7,6 +7,7 @@ import com.otc.hubs.User.DTO.ForgetPasswordDto;
 import com.otc.hubs.User.DTO.LoginDto;
 import com.otc.hubs.User.DTO.RegisterDto;
 import com.otc.hubs.entities.User;
+import com.otc.hubs.enums.SendEmailType;
 import com.otc.hubs.mapper.UserMapper;
 import com.otc.hubs.DTO.UserDTO;
 import com.otc.hubs.utils.JwtUtil;
@@ -52,12 +53,9 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
             return ResultResponse.error(StatusEnum.SERVICE_ERROR, "邮箱已被注册");
         }
 
+        String captchaKey = SendEmailType.REGISTER.getTemplateName() + ":captcha";
         // 校验 captcha
-        String captcha = redisUtils.getString("captcha");
-
-        System.out.println(captcha);
-
-        System.out.println(u.getCaptcha());
+        String captcha = redisUtils.getString(captchaKey);
 
         if (ObjUtil.notEqual(captcha, u.getCaptcha())) {
             return ResultResponse.success("验证码不正确");
@@ -67,6 +65,8 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
         user.setEmail(u.getEmail());
         user.setPassword(u.getPassword());
         int insert = userMapper.insert(user);
+//        需要删除验证码
+        redisUtils.delete(captchaKey);
         if (ObjUtil.equals(insert, 1)) {
             return ResultResponse.success("创建成功");
         } else {
