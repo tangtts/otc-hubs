@@ -1,7 +1,7 @@
-package com.utc.hubs.mapper;
+package com.otc.hubs.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.utc.hubs.entities.User;
+import com.otc.hubs.entities.User;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

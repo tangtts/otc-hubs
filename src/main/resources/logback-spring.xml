@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径
+    <property name="LOG_HOME" value="/app/user/runtime/log/" />
+    -->
+    <property name="LOG_HOME" value="${LOG_PATH}" />
+
+    <property name="PATTERN"
+              value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) %-5level [%thread] [%c] %msg%n " />
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成日志文件 -->
+    <appender name="LOG"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名 -->
+            <FileNamePattern>${LOG_HOME}/logback.%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <!-- 单个日志文件最大值，达到之后就进行切割。 -->
+            <MaxFileSize>300MB</MaxFileSize>
+            <!-- 日志文件总体的最大值，达到之后就不再产生日志。 -->
+            <totalSizeCap>10GB</totalSizeCap>
+            <!-- 日志文件最多保留的天数，也就是过期时间。 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!-- 日志输出级别 -->
+    <!-- 级别依次为【从高到低】：FATAL > ERROR > WARN > INFO > DEBUG > TRACE  -->
+    <!-- additivity:是否向上级logger传递打印信息。默认是true。 -->
+    <logger name="com.otc" level="debug" additivity="true"/>
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOG"/>
+    </root>
+</configuration>

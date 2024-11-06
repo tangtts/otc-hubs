@@ -1,4 +1,4 @@
-package com.utc.hubs.config;
+package com.otc.hubs.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

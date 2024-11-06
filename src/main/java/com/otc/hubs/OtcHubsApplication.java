@@ -1,13 +1,13 @@
-package com.utc.hubs;
+package com.otc.hubs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UtcHubsApplication {
+public class OtcHubsApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(UtcHubsApplication.class, args);
+    SpringApplication.run(OtcHubsApplication.class, args);
   }
 
 }

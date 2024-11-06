@@ -1,17 +1,51 @@
+server:
+  port: 8080
 spring:
   application:
     name: UTC-HUBS
 
   datasource:
-    url: jdbc:mysql://localhost:3306/UTC_HUBS?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/OTC_HUBS?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
     username: root
     password: 123456
     type: com.zaxxer.hikari.HikariDataSource
-server:
-  port: 8080
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      # password: 123456 #默认为空
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 2939117014@qq.com
+    password: 1413qqgmtskABC
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 mybatis-plus:
+    type-handlers-package: om.otc.hubs.TypeHandler
     mapper-locations: classpath:mapper/*.xml
-    type-aliases-package: com.utc.hubs.entity
+    type-aliases-package: com.otc.hubs.entities
     configuration:
       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      database-id: mysql
+    global-config:
+      db-config:
+#        主键自增
+        id-type: auto
+        logic-delete-field: is_deleted
+        logic-not-delete-value: 0
+        logic-delete-value: 1
 
